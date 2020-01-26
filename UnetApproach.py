@@ -1,4 +1,4 @@
-from unetmodel import *
+from Models import *
 import PIL
 from PIL import Image
 from torchvision.transforms import transforms
@@ -58,7 +58,7 @@ def Unet_test_model_for_user_input(name, user_input_dir, user_output_dir):
             output = bestESmodel(img)
             output = output.cpu()
             img = trans(output[0])
-           # img.show()
+            # img.show()
             img.save(user_output_dir+'/'+name+'_%d.tif'%(index))
     return True
   
@@ -67,13 +67,16 @@ def Initialize_Unet_paths (ImagePath,savePath):
     user_input_dir = ImagePath
     user_output_dir = savePath
 
-    # parameters to select different models ==> Just change here. 
+    # Modify here to select different mode. 
     # name = 'unet'
     name = 'unet_bn'
     # name = 'unet_d'
     Unet_test_model_for_user_input(name, user_input_dir, user_output_dir)
 
+## Comment the above code and Uncomment the below function calls to test model for User Input
+# # name = 'unet'
 # name = 'unet_bn'
+# # name = 'unet_d'
 # user_input_dir = 'Unet_input/'
 # user_output_dir = 'Unet_output/'
 # Unet_test_model_for_user_input(name, user_input_dir, user_output_dir)

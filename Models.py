@@ -1,12 +1,12 @@
 import os
 import torch
 import torch.nn as nn
-import numpy as np
 from torch.autograd import Variable
 import torch.nn.functional as F
+from skimage import io
+import numpy as np
 
-##################################################################################################
-## Unet model   
+## Unet model
 class double_conv(nn.Module):
     def __init__(self, in_ch, out_ch):
         super(double_conv, self).__init__()
@@ -19,7 +19,6 @@ class double_conv(nn.Module):
     def forward(self, x):
         x = self.conv(x)
         return x
-
 
 class down(nn.Module):
     def __init__(self, in_ch, out_ch):
@@ -71,8 +70,6 @@ class unet(nn.Module):
         self.up3 = up(256, 64)
         self.up4 = up(128, 64)
         self.out1 = nn.Conv2d(64, 1, 3, padding=1)
-        
-        # self.sigmoid = nn.Sigmoid()
         self.tanh = nn.Tanh()
 
     def forward(self,x):
@@ -82,20 +79,16 @@ class unet(nn.Module):
         x3 = self.down2(x2)
         x4 = self.down3(x3)
         x5 = self.down4(x4)
-        
         x = self.up1(x5, x4)
         x = self.up2(x, x3)
         x = self.up3(x, x2)
         x = self.up4(x, x1)
         x = self.out1(x)
-        
-        # x = self.sigmoid(x)
         x = self.tanh(x)
-
         return x
-##################################################################################################
-##################################################################################################
-## Unet Batch norm model
+## Unet model end 
+
+## Unet with Batch normalization model
 class double_conv_bn(nn.Module):
     def __init__(self, in_ch, out_ch):
         super(double_conv_bn, self).__init__()
@@ -186,7 +179,8 @@ class unet_bn(nn.Module):
         x = self.tanh(x)
 
         return x
-##################################################################################################
+## Unet with Batch normalization model end
+
 ## Unet dropout model
 class double_conv_d(nn.Module):
     def __init__(self, in_ch, out_ch):
@@ -254,13 +248,11 @@ class unet_d(nn.Module):
         self.up2 = up_d(512, 128)
         self.up3 = up_d(256, 64)
         self.up4 = up_d(128, 64)
-        self.out1 = nn.Conv2d(64, 1, 3, padding=1)
-        
+        self.out1 = nn.Conv2d(64, 1, 3, padding=1)        
         self.sigmoid = nn.Sigmoid()
         self.tanh = nn.Tanh()
 
-    def forward(self,x):
-        
+    def forward(self,x):        
         x1 = self.inc(x)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
@@ -272,9 +264,6 @@ class unet_d(nn.Module):
         x = self.up3(x, x2)
         x = self.up4(x, x1)
         x = self.out1(x)
-        
-        # x = self.sigmoid(x)
         x = self.tanh(x)
-
         return x
-##################################################################################################
+## Unet dropout model end
