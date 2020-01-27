@@ -41,7 +41,12 @@ python *any-python-file*
 OR
 Run the project in an IDE (eg: Visual Studio Code)
 
+**Steps to run the test scripts**
+1. Run each test script 
+OR
+Run the following command: coverage run -m unittest discover 
 
+2. Run the command : coverage report
 
 
 
